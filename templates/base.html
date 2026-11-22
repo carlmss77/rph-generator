@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}RPH Generator{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="{{ url_for('home') }}">RPH <span>Generator</span></a>
+  {% if user %}
+  <nav>
+    <a href="{{ url_for('home') }}" class="{{ 'on' if request.endpoint=='home' }}">This week</a>
+    <a href="{{ url_for('setup_review') }}" class="{{ 'on' if request.endpoint=='setup_review' }}">Timetable</a>
+    <a href="{{ url_for('holidays') }}" class="{{ 'on' if request.endpoint=='holidays' }}">Holidays</a>
+    <a href="{{ url_for('lessons') }}" class="{{ 'on' if request.endpoint=='lessons' }}">Lessons</a>
+    {% if google %}<a href="{{ url_for('logout') }}">Sign out</a>{% endif %}
+  </nav>
+  {% endif %}
+</div></header>
+<main>
+{% with msgs = get_flashed_messages(with_categories=true) %}{% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}{% endwith %}
+{% block body %}{% endblock %}
+</main>
+<script>
+document.querySelectorAll('form[data-busy]').forEach(f=>f.addEventListener('submit',()=>f.classList.add('busy')));
+</script>
+{% block script %}{% endblock %}
+</body>
+</html>

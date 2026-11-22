@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Upload module files</h1>
+<p class="sub">Select all your module files at once (for example MODULE 1-GET SMART.doc to MODULE 10-GET SMART.doc). The module number is read from each file name.</p>
+<div class="card">
+  <form method="post" enctype="multipart/form-data" data-busy>
+    <label>Module files (.doc or .docx)</label>
+    <input type="file" name="files" multiple accept=".doc,.docx" required>
+    {% if bank %}
+    <p class="small"><label style="display:inline"><input type="radio" name="mode" value="replace" checked> Replace all my lessons</label>
+    &nbsp; <label style="display:inline"><input type="radio" name="mode" value="add"> Add or update only these modules</label></p>
+    {% endif %}
+    <p><button class="btn">Read lessons</button> <span class="spinner muted">Reading files, this can take up to a minute for old .doc files...</span></p>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Upload one past weekly RPH</h1>
+<p class="sub">Choose a week you already made, e.g. <b>M41.docx</b>. The app keeps your school header and lesson table design, and reads your timetable, class names and where each class is up to.</p>
+<div class="card">
+  <form method="post" enctype="multipart/form-data" data-busy>
+    <label>Weekly RPH file (.docx)</label>
+    <input type="file" name="file" accept=".doc,.docx" required>
+    <p><button class="btn">Use this file</button> <span class="spinner muted">Reading...</span></p>
+  </form>
+  <p class="small muted">Tip: pick a full week (all days filled in), so the whole timetable is read.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Timetable and starting lesson</h1>
+<p class="sub">Read from your past RPH. Check it once; change it whenever your timetable changes.</p>
+<form method="post">
+<div class="card">
+  <h2>Week numbering</h2>
+  <p class="small muted">Tell the app the Monday of any one week. All other weeks are counted from it.</p>
+  <div class="row">
+    <div><label>Week</label><input type="number" name="ref_week" value="{{ profile.ref_week or '' }}" required></div>
+    <div><label>starts on Monday</label><input type="date" name="ref_monday" value="{{ (profile.ref_monday or '')[:10] }}" required></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>English periods each week</h2>
+  <table class="grid resp" id="tt">
+    <thead><tr><th>Day</th><th>Class</th><th>Time (as printed)</th><th></th></tr></thead>
+    <tbody>
+    {% for r in profile.timetable or [] %}
+    <tr><td><select name="tt_day">{% for d in DAYS %}<option {{ 'selected' if d==r.day }}>{{ d }}</option>{% endfor %}</select></td>
+      <td><input name="tt_cls" value="{{ r.cls }}"></td><td><input name="tt_time" value="{{ r.time }}"></td>
+      <td><button type="button" class="btn small ghost" onclick="this.closest('tr').remove()">Remove</button></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p><button type="button" class="btn small ghost" onclick="addRow('tt')">+ Add period</button></p>
+  <template id="tt-row"><tr><td><select name="tt_day">{% for d in DAYS %}<option>{{ d }}</option>{% endfor %}</select></td>
+    <td><input name="tt_cls" placeholder="3 Arena"></td><td><input name="tt_time" placeholder="1.00 – 2.00 p.m."></td>
+    <td><button type="button" class="btn small ghost" onclick="this.closest('tr').remove()">Remove</button></td></tr></template>
+</div>
+
+<div class="card">
+  <h2>Where each class is up to</h2>
+  <p class="small muted">The last lesson each class finished, at the end of a week. Each class then moves on one lesson every English period (holidays skipped). Add a new row if a class skips or repeats lessons. Use lesson 0 of module 0 for "nothing taught yet".</p>
+  <table class="grid resp" id="pg">
+    <thead><tr><th>End of week</th><th>Class</th><th>Module</th><th>Lesson</th><th></th></tr></thead>
+    <tbody>
+    {% for p in (profile.progress or [])|sort(attribute='week') %}
+    <tr><td><input type="number" name="pg_week" value="{{ p.week }}"></td><td><input name="pg_cls" value="{{ p.cls }}"></td>
+      <td><input type="number" name="pg_mod" value="{{ p.module }}"></td><td><input type="number" name="pg_les" value="{{ p.lesson }}"></td>
+      <td><button type="button" class="btn small ghost" onclick="this.closest('tr').remove()">Remove</button></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p><button type="button" class="btn small ghost" onclick="addRow('pg')">+ Add row</button></p>
+  <template id="pg-row"><tr><td><input type="number" name="pg_week"></td><td><input name="pg_cls" placeholder="3 Arena"></td>
+    <td><input type="number" name="pg_mod"></td><td><input type="number" name="pg_les"></td>
+    <td><button type="button" class="btn small ghost" onclick="this.closest('tr').remove()">Remove</button></td></tr></template>
+</div>
+
+<div class="card">
+  <h2>Topic printed for each module</h2>
+  <table class="grid">
+  {% for m in mods %}
+    <tr><td style="width:90px" class="muted">Module {{ m }}</td><td><input name="mod_{{ m }}" value="{{ profile.modules.get(m|string, 'Module ' ~ m) if profile.modules else 'Module ' ~ m }}"></td></tr>
+  {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h2>Reflection line for each class</h2>
+  <table class="grid">
+  {% for c in classes %}
+    <tr><td style="width:110px" class="muted">{{ c }}</td><td><input name="refl_{{ c }}" value="{{ (profile.reflection or {}).get(c, c ~ ' : ___ pupils did not achieve the objectives. Need guidance.') }}"></td></tr>
+  {% endfor %}
+  </table>
+</div>
+<p><button class="btn big">Save</button></p>
+</form>
+{% endblock %}
+{% block script %}
+<script>
+function addRow(id){const t=document.getElementById(id+'-row');document.querySelector('#'+id+' tbody').appendChild(t.content.cloneNode(true));}
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Holidays</h1>
+<p class="sub">No lessons are planned on these days, and classes do not move forward. A holiday page is added to that week's RPH.</p>
+<form method="post" enctype="multipart/form-data">
+<div class="card">
+  <table class="grid resp" id="h">
+    <thead><tr><th>Date</th><th>Name</th><th></th></tr></thead>
+    <tbody>
+    {% for h in profile.holidays or [] %}
+    <tr><td><input type="date" name="h_date" value="{{ h.date }}"></td><td class="wide"><input name="h_name" value="{{ h.name }}"></td>
+    <td><button type="button" class="btn small ghost" onclick="this.closest('tr').remove()">Remove</button></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p><button type="button" class="btn small ghost" onclick="addRow()">+ Add day</button></p>
+  <p class="small muted">A holiday over several days: add one row per day with the same name.</p>
+  <template id="h-row"><tr><td><input type="date" name="h_date"></td><td class="wide"><input name="h_name" placeholder="Cuti Deepavali"></td>
+    <td><button type="button" class="btn small ghost" onclick="this.closest('tr').remove()">Remove</button></td></tr></template>
+</div>
+{% if names %}
+<div class="card">
+  <h2>Holiday picture (optional)</h2>
+  <p class="small muted">Shown as the holiday page, like your Deepavali poster.</p>
+  <div class="row">
+    <select name="image_for">{% for n in names %}<option>{{ n }}{% if n in (profile.holiday_images or {}) %} (has picture){% endif %}</option>{% endfor %}</select>
+    <input type="file" name="image" accept=".png,.jpg,.jpeg" style="max-width:320px">
+  </div>
+</div>
+{% endif %}
+<p><button class="btn big">Save holidays</button></p>
+</form>
+{% endblock %}
+{% block script %}
+<script>
+function addRow(){const t=document.getElementById('h-row');document.querySelector('#h tbody').appendChild(t.content.cloneNode(true));}
+</script>
+{% endblock %}

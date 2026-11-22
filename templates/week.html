@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Week {{ week }}</h1>
+<p class="sub">Monday {{ monday.strftime('%d %B %Y') }}</p>
+{% if exists %}
+<div class="card">
+  <div class="row">
+    <a class="btn big" href="{{ url_for('download', week=week, ext='pdf') }}" target="_blank">Open PDF</a>
+    <a class="btn big ghost" href="{{ url_for('download', week=week, ext='docx') }}">Download Word</a>
+  </div>
+  {% if docx_link %}<p class="small muted">Also saved in Google Drive: <a href="{{ docx_link }}" target="_blank">open the Word file</a>.</p>{% endif %}
+  <p class="small muted">Check it, and change the reflection numbers after teaching if you need to.</p>
+</div>
+{% endif %}
+<div class="card">
+  <h2>What's in it</h2>
+  <table class="grid plan">
+  {% for r in summ.rows %}<tr><td class="d">{{ r.date }}</td><td><b>{{ r.what }}</b></td><td class="muted">{{ r.detail }}</td></tr>{% endfor %}
+  </table>
+  {% if not exists %}
+  <form method="post" action="{{ url_for('generate') }}" data-busy style="margin-top:12px"><input type="hidden" name="week" value="{{ week }}"><button class="btn">Make RPH</button> <span class="spinner muted">Making it...</span></form>
+  {% endif %}
+</div>
+{% endblock %}

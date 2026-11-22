@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if ready %}
+<h1>Hi {{ user.name }}</h1>
+<p class="sub">Pick the week and make your RPH.</p>
+<div class="card">
+  <form method="post" action="{{ url_for('generate') }}" data-busy>
+    <div class="big-week">
+      <div><label>Week (Minggu)</label><input type="number" name="week" value="{{ next_week or '' }}" min="1" max="60" required></div>
+      <button class="btn big">Make RPH</button>
+      <span class="spinner muted">Making it, a few seconds...</span>
+    </div>
+  </form>
+</div>
+{% if recent %}
+<div class="card">
+  <h2>Recent weeks</h2>
+  <table class="grid">
+  {% for g in recent %}
+    <tr><td><a href="{{ url_for('week_view', week=g.week) }}">Week {{ g.week }}</a></td><td class="muted">from {{ g.monday }}</td>
+    <td style="text-align:right"><a class="btn small ghost" href="{{ url_for('download', week=g.week, ext='pdf') }}">PDF</a> <a class="btn small ghost" href="{{ url_for('download', week=g.week, ext='docx') }}">Word</a></td></tr>
+  {% endfor %}
+  </table>
+  {% if folder %}<p class="small muted">All files are also in your <a href="{{ folder }}" target="_blank">RPH Generator folder in Google Drive</a>.</p>{% endif %}
+</div>
+{% endif %}
+{% else %}
+<h1>Set up for the year</h1>
+<p class="sub">Three steps, about five minutes. You only do this once a year.</p>
+{% endif %}
+<div class="card">
+  <h2>{{ 'Your setup' if ready else 'Steps' }}</h2>
+  <div class="steps">
+    <div class="step"><div class="dot {{ 'done' if steps.modules }}">1</div><div>
+      <strong>Upload your module files</strong>
+      <p>{% if steps.modules %}{{ bank|length }} lessons from {{ bank|map(attribute='module')|unique|list|length }} modules.{% else %}The ready-made lesson plans, e.g. MODULE 1 to MODULE 10 (.doc or .docx).{% endif %}</p>
+      <a class="btn small {{ 'ghost' if steps.modules }}" href="{{ url_for('setup_modules') }}">{{ 'Change' if steps.modules else 'Upload modules' }}</a>
+      {% if steps.modules %}<a class="btn small ghost" href="{{ url_for('lessons') }}">See lessons</a>{% endif %}
+    </div></div>
+    <div class="step"><div class="dot {{ 'done' if steps.past }}">2</div><div>
+      <strong>Upload one past weekly RPH</strong>
+      <p>{% if steps.past %}School format saved ({{ profile.template_title }}).{% else %}Any week you already made, e.g. M41.docx. The app copies your school's format and reads your timetable from it.{% endif %}</p>
+      <a class="btn small {{ 'ghost' if steps.past }}" href="{{ url_for('setup_past') }}" {% if not steps.modules %}style="pointer-events:none;opacity:.5"{% endif %}>{{ 'Change' if steps.past else 'Upload past RPH' }}</a>
+    </div></div>
+    <div class="step"><div class="dot {{ 'done' if steps.setup }}">3</div><div>
+      <strong>Check timetable and starting lesson</strong>
+      <p>{% if steps.setup %}{{ profile.timetable|length }} English periods a week, {{ profile.timetable|map(attribute='cls')|unique|list|length }} classes.{% else %}Confirm your periods and which lesson each class is up to.{% endif %}</p>
+      <a class="btn small {{ 'ghost' if steps.setup }}" href="{{ url_for('setup_review') }}" {% if not steps.past %}style="pointer-events:none;opacity:.5"{% endif %}>{{ 'Edit' if steps.setup else 'Check' }}</a>
+      <a class="btn small ghost" href="{{ url_for('holidays') }}">Holidays</a>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

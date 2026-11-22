@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Lessons</h1>
+<p class="sub">{{ bank|length }} lessons read from your module files, in teaching order.</p>
+{% for mod, items in bank|groupby('module') %}
+<div class="card">
+  <details>
+    <summary>{{ (profile.modules or {}).get(mod|string, 'Module ' ~ mod) }} · {{ items|length }} lessons</summary>
+    {% for l in items %}
+    <div class="lesson">
+      <h3>Lesson {{ l.lesson }} <span class="pill">{{ l.focus_main }}</span>{% for n in l.notes %} <span class="pill" style="color:var(--warn)">{{ n }}</span>{% endfor %}</h3>
+      <div class="small"><b>Learning standard:</b> {{ l.ls_main }}{% if l.ls_comp %} / {{ l.ls_comp }}{% endif %}</div>
+      <div class="small"><b>Pre-lesson:</b> {{ l.pre|join(' ') }}</div>
+      <ol>{% for s in l.delivery %}<li>{{ s }}</li>{% endfor %}</ol>
+      <div class="small"><b>Post-lesson:</b> {{ l.post|join(' ') }}</div>
+    </div>
+    {% endfor %}
+  </details>
+</div>
+{% endfor %}
+{% endblock %}
