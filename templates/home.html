@@ -1,32 +1,43 @@
 {% extends 'base.html' %}
 {% block body %}
 {% if ready %}
-<h1>Hi {{ user.name }}</h1>
-<p class="sub">Pick the week and make your RPH.</p>
-<div class="card">
-  <form method="post" action="{{ url_for('generate') }}" data-busy>
-    <div class="big-week">
-      <div><label>Week (Minggu)</label><input type="number" name="week" value="{{ next_week or '' }}" min="1" max="60" required></div>
-      <button class="btn big">Make RPH</button>
-      <span class="spinner muted">Making it, a few seconds...</span>
+<section class="welcome">
+  <div class="welcome-copy">
+    <span class="eyebrow light">Selamat datang</span>
+    <h1>Hi {{ user.name }}</h1>
+    <p>Pick the week and make your RPH. It takes a few seconds.</p>
+  </div>
+  <form method="post" action="{{ url_for('generate') }}" data-busy class="make">
+    <label for="wk">Week (Minggu)</label>
+    <div class="make-row">
+      <input id="wk" type="number" name="week" value="{{ next_week or '' }}" min="1" max="60" required>
+      <button class="btn big light">Make RPH <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </div>
+    <span class="spinner">Making it, a few seconds...</span>
   </form>
-</div>
+</section>
 {% if recent %}
 <div class="card">
   <h2>Recent weeks</h2>
-  <table class="grid">
+  <div class="weeks">
   {% for g in recent %}
-    <tr><td><a href="{{ url_for('week_view', week=g.week) }}">Week {{ g.week }}</a></td><td class="muted">from {{ g.monday }}</td>
-    <td style="text-align:right"><a class="btn small ghost" href="{{ url_for('download', week=g.week, ext='pdf') }}">PDF</a> <a class="btn small ghost" href="{{ url_for('download', week=g.week, ext='docx') }}">Word</a></td></tr>
+    <div class="wk">
+      <a class="wk-main" href="{{ url_for('week_view', week=g.week) }}"><span class="wk-num">{{ g.week }}</span><span><b>Week {{ g.week }}</b><small>from {{ g.monday }}</small></span></a>
+      <div class="wk-dl"><a class="btn small ghost" href="{{ url_for('download', week=g.week, ext='pdf') }}">PDF</a><a class="btn small ghost" href="{{ url_for('download', week=g.week, ext='docx') }}">Word</a></div>
+    </div>
   {% endfor %}
-  </table>
+  </div>
   {% if folder %}<p class="small muted">All files are also in your <a href="{{ folder }}" target="_blank">RPH Generator folder in Google Drive</a>.</p>{% endif %}
 </div>
 {% endif %}
 {% else %}
-<h1>Set up for the year</h1>
-<p class="sub">Three steps, about five minutes. You only do this once a year.</p>
+<section class="welcome setup">
+  <div class="welcome-copy">
+    <span class="eyebrow light">Getting started</span>
+    <h1>Set up for the year</h1>
+    <p>Three steps, about five minutes. You only do this once a year.</p>
+  </div>
+</section>
 {% endif %}
 <div class="card">
   <h2>{{ 'Your setup' if ready else 'Steps' }}</h2>

@@ -22,4 +22,6 @@ Without `GOOGLE_CLIENT_ID` the app runs for one user and keeps files in `./data`
 
 See [DEPLOY.md](DEPLOY.md).
 
-![Home](docs/screenshots/3_home_ready.png)
+![Sign in](docs/screenshots/1_sign_in.png)
+![Home](docs/screenshots/2_home.png)
+![On a phone](docs/screenshots/3_phone.png)
