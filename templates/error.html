@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="card">
+  <h1>Something went wrong</h1>
+  <p class="sub">The app hit an error. Please go back and try again. If it keeps happening, send this message to whoever set up the app:</p>
+  <p><code>{{ kind }}: {{ msg }}</code></p>
+  <div class="row"><a class="btn" href="{{ url_for('home') }}">Back to home</a> <a class="btn ghost" href="{{ url_for('logout') }}">Sign out</a></div>
+</div>
+{% endblock %}

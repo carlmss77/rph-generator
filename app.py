@@ -31,6 +31,8 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '').strip()
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '').strip()
 GOOGLE = bool(GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET)
 
+DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file'
+
 if GOOGLE:
     from authlib.integrations.flask_client import OAuth
     oauth = OAuth(app)
@@ -39,7 +41,7 @@ if GOOGLE:
         client_id=GOOGLE_CLIENT_ID,
         client_secret=GOOGLE_CLIENT_SECRET,
         server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-        client_kwargs={'scope': 'openid email profile https://www.googleapis.com/auth/drive.file'},
+        client_kwargs={'scope': 'openid email profile ' + DRIVE_SCOPE},
         authorize_params={'access_type': 'offline', 'prompt': 'consent'},
     )
 
@@ -103,6 +105,27 @@ def inject():
     return {'user': current_user(), 'google': GOOGLE, 'DAYS': DAYS}
 
 
+@app.errorhandler(Exception)
+def on_error(e):
+    from werkzeug.exceptions import HTTPException
+    if isinstance(e, HTTPException):
+        return e
+    app.logger.exception('Unhandled error on %s', request.path)
+    resp = getattr(e, 'response', None)
+    status = getattr(resp, 'status_code', None)
+    if status in (401, 403) and GOOGLE:
+        detail = ''
+        try:
+            detail = resp.json().get('error', {}).get('message', '')
+        except Exception:
+            pass
+        session.clear()
+        flash('Google Drive refused access' + (f': {detail}' if detail else '') +
+              '. Please sign in again and tick the box for Google Drive.', 'error')
+        return redirect(url_for('login'))
+    return render_template('error.html', kind=type(e).__name__, msg=str(e)[:400]), 500
+
+
 # ------------------------------------------------------------ sign in
 @app.route('/login')
 def login():
@@ -120,8 +143,19 @@ def auth_google():
 
 @app.route('/auth/callback')
 def auth_callback():
-    tok = oauth.google.authorize_access_token()
-    info = tok.get('userinfo') or oauth.google.userinfo()
+    try:
+        tok = oauth.google.authorize_access_token()
+        info = tok.get('userinfo') or oauth.google.userinfo()
+    except Exception as e:
+        app.logger.exception('Google sign-in failed')
+        session.clear()
+        flash(f'Google sign-in did not finish ({type(e).__name__}: {e}). Please try again.', 'error')
+        return redirect(url_for('login'))
+    if DRIVE_SCOPE not in (tok.get('scope') or ''):
+        session.clear()
+        flash('The app needs permission to save files in your Google Drive. '
+              'Sign in again and tick the box for Google Drive.', 'error')
+        return redirect(url_for('login'))
     session.permanent = True
     session['user'] = {'email': info['email'], 'name': info.get('given_name') or info.get('name') or info['email']}
     session['token'] = {k: tok[k] for k in ('access_token', 'refresh_token', 'expires_at') if k in tok}
