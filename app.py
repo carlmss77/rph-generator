@@ -390,6 +390,11 @@ def privacy():
     return render_template('privacy.html', contact=os.environ.get('SUPPORT_EMAIL', ''))
 
 
+@app.route('/help')
+def help_page():
+    return render_template('help.html', contact=os.environ.get('SUPPORT_EMAIL', ''))
+
+
 @app.route('/terms')
 def terms():
     return render_template('terms.html', contact=os.environ.get('SUPPORT_EMAIL', ''))
