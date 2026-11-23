@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Terms of use · RPH Generator{% endblock %}
+{% block body %}
+<article class="card prose">
+  <h1>Terms of use</h1>
+  <p class="muted">Last updated 23 November 2026</p>
+  <p>RPH Generator is a free tool that teachers can use to make weekly lesson plans from their own files. By using it you agree to these terms.</p>
+  <ul>
+    <li>Only upload files you are allowed to use.</li>
+    <li>Check each generated RPH before you hand it in. You are responsible for its content.</li>
+    <li>The app is provided as is, without any guarantee. It may be unavailable at times or change without notice.</li>
+    <li>Your files stay in your own Google Drive. See the <a href="{{ url_for('privacy') }}">privacy policy</a>.</li>
+  </ul>
+  <p>Questions: {% if contact %}<a href="mailto:{{ contact }}">{{ contact }}</a>{% else %}contact the teacher who shared this app with you{% endif %}.</p>
+</article>
+{% endblock %}

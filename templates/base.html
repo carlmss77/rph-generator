@@ -26,6 +26,7 @@
   </nav>
   <div class="who">
     <span class="avatar" title="{{ user.name }}">{{ (user.name or '?')[:1]|upper }}</span>
+    <a class="signout" href="{{ url_for('help_page') }}">Help</a>
     {% if google %}<a class="signout" href="{{ url_for('logout') }}">Sign out</a>{% endif %}
   </div>
   {% endif %}
@@ -34,7 +35,7 @@
 {% with msgs = get_flashed_messages(with_categories=true) %}{% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}{% endwith %}
 {% block body %}{% endblock %}
 </main>
-<footer class="foot">RPH Generator · Made for teachers{% if google %} · Your files stay in your own Google Drive{% endif %}</footer>
+<footer class="foot">RPH Generator · Made for teachers{% if google %} · Your files stay in your own Google Drive{% endif %} · <a href="{{ url_for('help_page') }}">How to use</a> · <a href="{{ url_for('privacy') }}">Privacy</a> · <a href="{{ url_for('terms') }}">Terms</a></footer>
 <script>
 document.querySelectorAll('form[data-busy]').forEach(f=>f.addEventListener('submit',()=>f.classList.add('busy')));
 </script>

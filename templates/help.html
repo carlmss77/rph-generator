@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}How to use · RPH Generator{% endblock %}
+{% block body %}
+<article class="card prose guide">
+  <h1>How to use RPH Generator</h1>
+  <p class="muted">A short guide for teachers. Setup takes about 5 minutes, once a year. After that, each week takes a few seconds.</p>
+
+  <nav class="toc">
+    <a href="#before">Before you start</a> · <a href="#signin">Sign in</a> · <a href="#setup">Setup (once a year)</a> ·
+    <a href="#weekly">Every week</a> · <a href="#holidays">Holidays</a> · <a href="#phone">On your phone</a> · <a href="#problems">Problems</a>
+  </nav>
+
+  <h2 id="before">Before you start</h2>
+  <p>Have these files ready on your laptop:</p>
+  <ul>
+    <li><b>Your module files</b>, the ready-made lesson plans, e.g. <i>MODULE 1-GET SMART.doc</i> to <i>MODULE 10-GET SMART.doc</i>. Word files (.doc or .docx). The module number must be in each file name.</li>
+    <li><b>One weekly RPH you already made</b>, e.g. <i>M41.docx</i>. Pick a full week with every day filled in. The app copies its format and reads your timetable from it.</li>
+  </ul>
+  <p>A laptop is easiest for setup. You can make weekly RPH on your phone later.</p>
+
+  <h2 id="signin">1. Sign in</h2>
+  <ol>
+    <li>Open the app and press <b>Sign in with Google</b>.</li>
+    <li>Choose your Google account.</li>
+    <li>When Google asks, <b>tick the box for Google Drive</b> and press Continue. The app can only see the files it makes itself, in a folder called <i>RPH Generator</i> in your Drive.</li>
+  </ol>
+
+  <h2 id="setup">2. Setup (once a year)</h2>
+  <p>The home page shows three steps. Do them in order. A step turns green when it is done.</p>
+
+  <h3>Step 1: Upload your module files</h3>
+  <ol>
+    <li>Press <b>Upload modules</b>.</li>
+    <li>Select <b>all</b> your module files at once (hold Ctrl and click each one, or press Ctrl+A in the folder).</li>
+    <li>Press <b>Read lessons</b> and wait. Old .doc files can take up to a minute.</li>
+    <li>Press <b>See lessons</b> to check that every module and lesson is there.</li>
+  </ol>
+
+  <h3>Step 2: Upload one past weekly RPH</h3>
+  <ol>
+    <li>Press <b>Upload past RPH</b> and choose your file, e.g. <i>M41.docx</i>.</li>
+    <li>Press <b>Use this file</b>.</li>
+  </ol>
+
+  <h3>Step 3: Check your timetable</h3>
+  <p>The app fills this page in from your past RPH. Check each part, fix anything wrong, then press <b>Save</b>.</p>
+  <ul>
+    <li><b>Week numbering</b>: type any one week number and the date of its Monday (for example, this week's number and this Monday). Every other week is counted from it.</li>
+    <li><b>English periods each week</b>: one row per period, with day, class and time. Use <b>+ Add period</b> or <b>Remove</b> to change it.</li>
+    <li><b>Where each class is up to</b>: the last lesson each class finished at the end of a week. Each class then moves on one lesson every period. If a class skips or repeats a lesson, add a new row for that week.</li>
+    <li><b>Topic for each module</b> and <b>Reflection line for each class</b>: the words printed in your RPH. Change them if you like.</li>
+  </ul>
+
+  <h2 id="weekly">3. Every week</h2>
+  <ol>
+    <li>Open the app. The home page shows a box with the week number already filled in.</li>
+    <li>Check the week number, then press <b>Make RPH</b>. It takes a few seconds.</li>
+    <li>Press <b>Open PDF</b> to view or print it, or <b>Download Word</b> to edit it.</li>
+    <li>After teaching, change the reflection numbers in the Word file if you need to.</li>
+  </ol>
+  <p>Every RPH is also saved in the <i>RPH Generator</i> folder in your Google Drive. Your last weeks are listed under <b>Recent weeks</b> on the home page.</p>
+
+  <h2 id="holidays">Holidays</h2>
+  <ol>
+    <li>Press <b>Holidays</b> at the top.</li>
+    <li>Press <b>+ Add day</b>, pick the date and type the name, e.g. <i>Cuti Deepavali</i>. For a holiday of several days, add one row per day with the same name.</li>
+    <li>Optional: choose a picture (PNG or JPG) to show as the holiday page.</li>
+    <li>Press <b>Save holidays</b>.</li>
+  </ol>
+  <p>No lesson is planned on a holiday, and classes do not move forward that day. Add holidays <b>before</b> you make that week's RPH. If you already made it, just press Make RPH again.</p>
+
+  <h2 id="phone">On your phone</h2>
+  <p>Open the same address in your phone browser and sign in with the same Google account. The tabs are at the bottom of the screen. Tip: use "Add to Home screen" in your browser menu to open it like an app.</p>
+
+  <h2 id="problems">Problems</h2>
+  <dl>
+    <dt>The app takes about a minute to open.</dt>
+    <dd>It sleeps when nobody has used it for a while. Wait a moment and it wakes up.</dd>
+    <dt>"The app needs permission to save files in your Google Drive."</dt>
+    <dd>Sign in again and tick the Google Drive box.</dd>
+    <dt>A class is on the wrong lesson.</dt>
+    <dd>Open <b>Timetable</b>, add a row under "Where each class is up to" with the right lesson for last week, press Save, then make the RPH again.</dd>
+    <dt>My timetable changed.</dt>
+    <dd>Open <b>Timetable</b>, change the periods, press Save.</dd>
+    <dt>I have a new set of modules.</dt>
+    <dd>Open <b>Lessons</b>, upload the new files and choose "Replace all my lessons". Then check Timetable.</dd>
+    <dt>Something else is wrong.</dt>
+    <dd>{% if contact %}Email <a href="mailto:{{ contact }}">{{ contact }}</a> with the week number and what you see.{% else %}Contact the teacher who shared this app with you, with the week number and what you see.{% endif %}</dd>
+  </dl>
+</article>
+{% endblock %}
