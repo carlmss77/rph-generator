@@ -23,4 +23,12 @@ The free plan sleeps after 15 minutes without visitors; the first visit after th
 In Render > your service > **Environment**, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, then **Manual deploy**. Open the app address and sign in.
 
 ## Opening it to all teachers
-In Testing mode only listed test users can sign in. To let any teacher in, press **Publish app** on the consent screen. `drive.file` is not a sensitive scope, so Google only checks the app name, logo and privacy page.
+In Testing mode only listed test users can sign in. To let any teacher in:
+
+1. In Render > **Environment**, add `SUPPORT_EMAIL` (shown on the privacy page as the contact address) and redeploy.
+2. In Google Cloud > **Google Auth Platform > Branding**, fill in:
+   - App home page: `https://<your-app>.onrender.com/`
+   - Privacy policy: `https://<your-app>.onrender.com/privacy`
+   - Terms of service: `https://<your-app>.onrender.com/terms`
+   - Authorized domains: `<your-app>.onrender.com`
+3. **Audience > Publish app**. `drive.file` is not a sensitive scope, so no long review is needed. It is free.

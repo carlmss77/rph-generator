@@ -170,8 +170,14 @@ def logout():
 
 # ------------------------------------------------------------ home
 @app.route('/')
-@login_required
 def home():
+    if not current_user():
+        return render_template('login.html')  # public landing page (also Google's "homepage" URL)
+    return _home()
+
+
+@login_required
+def _home():
     s, profile, bank, has_tpl = load()
     steps = {
         'modules': bool(bank),
@@ -376,6 +382,17 @@ def download(week, ext):
         data = pdf
     mime = 'application/pdf' if ext == 'pdf' else 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     return send_file(io.BytesIO(data), mimetype=mime, as_attachment=(ext == 'docx'), download_name=name)
+
+
+# ------------------------------------------------------------ public pages (needed to publish the Google sign-in)
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html', contact=os.environ.get('SUPPORT_EMAIL', ''))
+
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html', contact=os.environ.get('SUPPORT_EMAIL', ''))
 
 
 @app.route('/healthz')
